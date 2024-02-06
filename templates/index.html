@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ETF Dashboard</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    <h1>ETF Dashboard</h1>
+    <form action="/" method="post">
+        <label for="etf_ticker">Select an ETF:</label>
+        <select name="etf_ticker" id="etf_ticker">
+            {% for ticker, name in etf_info.items() %}
+                <option value="{{ ticker }}" {% if selected_ticker == ticker %}selected{% endif %}>{{ name }}</option>
+            {% endfor %}
+        </select>
+        <div>
+            <label><input type="checkbox" name="data_points" value="Open"> Open</label>
+            <label><input type="checkbox" name="data_points" value="High"> High</label>
+            <label><input type="checkbox" name="data_points" value="Low"> Low</label>
+            <label><input type="checkbox" name="data_points" value="Close" checked> Close</label>
+            <label><input type="checkbox" name="data_points" value="Volume"> Volume</label>
+        </div>
+        <button type="submit">Show Data</button>
+    </form>
+    <div id="chart"></div>
+    <script>
+        var graph_json = {{ graph_json|safe }};
+        Plotly.newPlot('chart', graph_json.data, graph_json.layout);
+    </script>
+</body>
+</html>
