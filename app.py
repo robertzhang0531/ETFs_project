@@ -48,7 +48,7 @@ def index():
 
     graph_json = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
-    return render_template('index.html', etf_info=etf_info, selected_ticker=selected_ticker, graph_json=graph_json)
+    return render_template('index.html', etf_info=etf_info, selected_ticker=selected_ticker, selected_data_points=selected_data_points, graph_json=graph_json)
 
 if __name__ == '__main__':
     app.run(debug=True)

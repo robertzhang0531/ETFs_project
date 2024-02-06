@@ -10,16 +10,14 @@
     <form action="/" method="post">
         <label for="etf_ticker">Select an ETF:</label>
         <select name="etf_ticker" id="etf_ticker">
-            {% for ticker, name in etf_info.items() %}
-                <option value="{{ ticker }}" {% if selected_ticker == ticker %}selected{% endif %}>{{ name }}</option>
+            {% for ticker, filename in etf_info.items() %}
+                <option value="{{ ticker }}" {% if selected_ticker == ticker %}selected{% endif %}>{{ ticker }}</option>
             {% endfor %}
         </select>
         <div>
-            <label><input type="checkbox" name="data_points" value="Open"> Open</label>
-            <label><input type="checkbox" name="data_points" value="High"> High</label>
-            <label><input type="checkbox" name="data_points" value="Low"> Low</label>
-            <label><input type="checkbox" name="data_points" value="Close" checked> Close</label>
-            <label><input type="checkbox" name="data_points" value="Volume"> Volume</label>
+            {% for point in ['Open', 'High', 'Low', 'Close', 'Volume'] %}
+                <label><input type="checkbox" name="data_points" value="{{ point }}" {% if point in selected_data_points %}checked{% endif %}> {{ point }}</label>
+            {% endfor %}
         </div>
         <button type="submit">Show Data</button>
     </form>
