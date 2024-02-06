@@ -47,7 +47,7 @@ This project develops a Python-based system for dynamically retrieving, validati
 
 ## Function Descriptions
 
-### `ticker_retrieval.py` Function Descriptions
+### `ticker_retrieval.py`
 
 - **`ETFDataRetriever` Class**: Interacts with the IEX Cloud API to fetch and process ETF ticker information.
   - `__init__(self, api_key)`: Initializes the instance with an IEX Cloud API key.
@@ -56,7 +56,7 @@ This project develops a Python-based system for dynamically retrieving, validati
   - `validate_etf_data(self, etf_data)`: Ensures that essential information is present in the ETF data.
   - `validate_and_update_etf_data(self, file_path='etf_data.json')`: Retrieves, validates, and updates the ETF data in local JSON storage.
 
-### `price_download.py` Function Descriptions
+### `price_download.py`
 
 - **`download_price_data(tickers, start_date, end_date)`**: Downloads historical price data for specified ETF tickers within a given date range using `yfinance`.
   - `tickers`: List of ETF ticker symbols.
@@ -65,7 +65,7 @@ This project develops a Python-based system for dynamically retrieving, validati
   
 - **`get_user_date_input(prompt)`**: Prompts the user for a date, ensuring it matches the expected `'YYYY-MM-DD'` format.
 
-### Web Dashboard Functions (in `app.py`)
+### Web Dashboard (`app.py`)
 
 - **`load_etf_info()`**: Dynamically loads available ETF tickers and their corresponding CSV file paths based on the `data/etf_csvs/` directory content.
 - **`index()`**: The main view function for the Flask application. It processes form submissions, generates interactive charts with Plotly based on user-selected data points, and renders the dashboard page.
