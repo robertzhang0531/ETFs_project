@@ -54,10 +54,15 @@ class ETFDataRetriever:
 
         Parameters:
         - etf_data (list): A list of dictionaries containing ETF information.
-        - file_path (str): Path to the JSON file where data will be stored.
+        - file_path (str): The name of the JSON file where data will be stored.
         """
-        file_path = os.path.join('data', 'etfs_json', file_name)
-        with open(file_path, 'w') as file:
+        base_path = os.path.join(os.path.dirname(__file__), '..', 'data', 'etfs_json')
+        full_file_path = os.path.join(base_path, file_path)
+        
+        os.makedirs(os.path.dirname(full_file_path), exist_ok=True)
+        
+        # Write the ETF data to the specified JSON file
+        with open(full_file_path, 'w') as file:
             json.dump(etf_data, file, indent=4)
 
     @staticmethod
@@ -74,19 +79,22 @@ class ETFDataRetriever:
         validated_data = [item for item in etf_data if 'symbol' in item and 'name' in item]
         return validated_data
 
-    def validate_and_update_etf_data(self, file_path='etf_data.json'):
+    def validate_and_update_etf_data(self, file_name='etf_data.json'):
         """
         Updates the ETF data JSON file with the latest information.
 
         Parameters:
         - file_path (str): Path to the JSON file where data is stored.
         """
+        base_path = os.path.join(os.path.dirname(__file__), '..', 'data', 'etfs_json')
+        full_file_path = os.path.join(base_path, file_name)
+        
         new_data = self.fetch_etf_tickers()
         new_data = self.validate_etf_data(new_data)
         
         try:
-            if os.path.exists(file_path):
-                with open(file_path) as file:
+            if os.path.exists(full_file_path):
+                with open(full_file_path) as file:
                     existing_data = json.load(file)
             else:
                 existing_data = []
@@ -94,14 +102,19 @@ class ETFDataRetriever:
             existing_data = []
 
         updated_data = {item['symbol']: item for item in existing_data + new_data}
-        self.save_etf_data_to_json(list(updated_data.values()), file_path)
+        self.save_etf_data_to_json(list(updated_data.values()), full_file_path)
 
-def get_etf_ticker_symbols(api_key, file_path='etf_data.json'):
+def get_etf_ticker_symbols(api_key, file_name='etf_data.json'):
     etf_retriever = ETFDataRetriever(api_key)
-    etf_retriever.validate_and_update_etf_data(file_path)
-    with open(file_path, 'r') as file:
+    base_path = os.path.join(os.path.dirname(__file__), '..', 'data', 'etfs_json')
+    full_file_path = os.path.join(base_path, file_name)
+    
+    etf_retriever.validate_and_update_etf_data(full_file_path)
+    
+    with open(full_file_path, 'r') as file:
         etf_data = json.load(file)
     return [etf['symbol'] for etf in etf_data]
+
 
 def main():
     api_key = 'REPLACE WITH YOUR API KEY'

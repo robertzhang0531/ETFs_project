@@ -3,7 +3,7 @@ import time
 import datetime
 import pandas as pd
 import os
-from scripts.ticker_retrieval import get_etf_ticker_symbols
+from ticker_retrieval import get_etf_ticker_symbols
 
 def download_price_data(tickers, start_date, end_date):
     """
@@ -28,16 +28,22 @@ def download_price_data(tickers, start_date, end_date):
     return data
 
 def get_user_date_input(prompt):
-    """Prompts the user for a date input and validates the format."""
+    """Prompts the user for a date input and validates the format, normalizing it to YYYY-MM-DD."""
     while True:
         date_str = input(prompt)
         try:
-            # Attempt to convert the user input into a datetime object
             valid_date = datetime.datetime.strptime(date_str, '%Y-%m-%d')
-            return date_str  # Return the valid date string
+            
+            normalized_date_str = valid_date.strftime('%Y-%m-%d')
+            return normalized_date_str
         except ValueError:
-            # If a ValueError is raised, inform the user and prompt again
-            print("Invalid date format. Please use YYYY-MM-DD format.")
+            try:
+                valid_date = datetime.datetime.strptime(date_str, '%Y-%m-%d')
+                normalized_date_str = valid_date.strftime('%Y-%m-%d')
+                return normalized_date_str
+            except ValueError:
+                # If a ValueError is raised, inform the user and prompt again
+                print("Invalid date format. Please use YYYY-MM-DD format.")
 
 def main():
     api_key = 'REPLACE WITH YOUR API KEY'
@@ -47,11 +53,14 @@ def main():
     print(f"Start Date: {start_date}, End Date: {end_date}")
     etf_data = download_price_data(tickers, start_date, end_date)
     
+    base_path = os.path.join(os.path.dirname(__file__), '..', 'data', 'etf_csvs')
+    os.makedirs(base_path, exist_ok=True)
+    
     # Process and save each ETF's DataFrame to a CSV file
     for ticker, df in etf_data.items():
         if not df.empty:
             csv_filename = f"{ticker}_prices_{start_date}_to_{end_date}.csv"
-            csv_path = os.path.join('data', 'etf_csvs', csv_filename)
+            csv_path = os.path.join(base_path, csv_filename)
             df.to_csv(csv_path, index=True)
             print(f"Saved data for {ticker} to {csv_path}")
         else:
