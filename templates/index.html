@@ -9,9 +9,15 @@
     <h1>ETF Dashboard</h1>
     <form action="/" method="post">
         <label for="etf_ticker">Select an ETF:</label>
-        <select name="etf_ticker" id="etf_ticker">
-            {% for ticker, filename in etf_info.items() %}
+        <select name="etf_ticker" id="etf_ticker" onchange="this.form.submit()">
+            {% for ticker in etf_info.keys() %}
                 <option value="{{ ticker }}" {% if selected_ticker == ticker %}selected{% endif %}>{{ ticker }}</option>
+            {% endfor %}
+        </select>
+        <label for="date_range">Select Date Range:</label>
+        <select name="date_range" id="date_range">
+            {% for range in etf_info[selected_ticker] %}
+                <option value="{{ range }}" {% if selected_date_range == range %}selected{% endif %}>{{ range.replace('_', ' ') }}</option>
             {% endfor %}
         </select>
         <div>
